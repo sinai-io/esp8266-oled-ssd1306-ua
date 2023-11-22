@@ -1151,8 +1151,17 @@ char DefaultFontTableLookup(const uint8_t ch) {
 	LASTCHAR = ch;
 
 	switch (last) {    // conversion depnding on first UTF8-character
-		case 0xC2: return (uint8_t) ch;
-		case 0xC3: return (uint8_t) (ch | 0xC0);
+		// 0xD0 and 0xD1 : Cyrillic
+    case 0xD0: if (ch == 0x81) return  (0xA8);   //Ё
+               else if (ch >= 0x90 && ch <= 0xBF) return  (ch + 0x30);
+               break;
+    case 0xD1: if (ch == 0x91) return  (0xB8);   //ё
+               else if (ch >= 0x80 && ch <= 0x8F) return  (ch + 0x70);
+               break;
+    case 0xC2: return  (ch);  
+               break;
+    case 0xC3: return  (ch | 0xC0);  
+               break;
 		case 0x82: if (ch == 0xAC) return (uint8_t) 0x80;    // special case Euro-symbol
 	}
 
